@@ -36,34 +36,286 @@
 
 <link rel="stylesheet" href="styles.css" />
 
+
+
+
+
+
+
+
+
+
+
+
+
 <style>
-  .required-star {
-    color: #b3261e;
-    font-weight: 700;
-    margin-left: 0.12rem;
+/* Let's Connect — premium envelope communication visual */
+.connect-envelope-scene {
+  position: relative;
+  width: min(100%, 420px);
+  height: 285px;
+  margin: 1.6rem auto 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.connect-envelope-scene::before {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(204,159,82,.12),
+    rgba(204,159,82,.42),
+    rgba(204,159,82,.12),
+    transparent
+  );
+}
+
+.paper-trail {
+  position: absolute;
+  left: 8%;
+  right: 45%;
+  top: 49%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(204,159,82,.35));
+}
+
+.address-paper {
+  position: absolute;
+  z-index: 3;
+  left: 10%;
+  top: 92px;
+  width: 128px;
+  height: 86px;
+  padding: 12px 13px;
+  box-sizing: border-box;
+  background: #fffdf8;
+  border: 1px solid rgba(24,33,45,.15);
+  box-shadow: 0 10px 26px rgba(20,28,38,.10);
+  transform: rotate(-3deg);
+  animation: invictusPaperIntoEnvelope 5.4s cubic-bezier(.42,0,.58,1) infinite;
+  will-change: transform, opacity;
+}
+
+.paper-topline {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: #cc9f52;
+  margin-bottom: 8px;
+}
+
+.paper-rule {
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(24,33,45,.13);
+  margin: 6px 0;
+}
+
+.rule-1 { width: 72%; }
+.rule-2 { width: 58%; }
+.rule-3 { width: 80%; }
+
+.paper-address {
+  margin-top: 10px;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: #18212d;
+}
+
+.envelope {
+  position: absolute;
+  z-index: 4;
+  right: 11%;
+  top: 86px;
+  width: 190px;
+  height: 128px;
+  filter: drop-shadow(0 16px 25px rgba(20,28,38,.12));
+  animation: invictusEnvelopeSend 5.4s cubic-bezier(.42,0,.58,1) infinite;
+  will-change: transform, opacity;
+}
+
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(24,33,45,.17);
+  border-radius: 5px;
+  background: linear-gradient(145deg, #fdfbf5, #eee8dc);
+}
+
+.envelope-paper {
+  position: absolute;
+  z-index: 2;
+  left: 15px;
+  right: 15px;
+  top: 15px;
+  height: 74px;
+  background: #fff;
+  border: 1px solid rgba(24,33,45,.08);
+  box-shadow: 0 5px 12px rgba(20,28,38,.06);
+}
+
+.envelope-paper::before,
+.envelope-paper::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  background: rgba(24,33,45,.13);
+  left: 12px;
+  right: 12px;
+}
+
+.envelope-paper::before { top: 20px; }
+.envelope-paper::after { top: 29px; right: 42px; }
+
+.envelope-front {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 76px;
+  background: linear-gradient(145deg, #f7f2e8, #e9e1d3);
+  clip-path: polygon(0 0, 50% 62%, 100% 0, 100% 100%, 0 100%);
+  border-radius: 0 0 5px 5px;
+}
+
+.envelope-flap {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 78px;
+  background: linear-gradient(180deg, #fffdf8, #eee7da);
+  clip-path: polygon(0 0, 100% 0, 50% 73%);
+  transform-origin: top center;
+  animation: invictusEnvelopeFlap 5.4s ease-in-out infinite;
+}
+
+.envelope-label {
+  position: absolute;
+  z-index: 7;
+  right: 13px;
+  bottom: 12px;
+  padding: 4px 7px;
+  border: 1px solid rgba(204,159,82,.42);
+  background: rgba(255,253,248,.9);
+  color: #18212d;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+@keyframes invictusPaperIntoEnvelope {
+  0%, 14% {
+    transform: translate3d(0, 0, 0) rotate(-3deg) scale(1);
+    opacity: 1;
   }
 
-  .field-warning {
-    min-height: 1.15em;
-    margin: 0.38rem 0 0;
-    font-size: 0.78rem;
-    line-height: 1.35;
-    color: #b3261e;
+  /* Move directly toward the envelope opening — never behind it */
+  27% {
+    transform: translate3d(52px, 0, 0) rotate(-1.5deg) scale(.99);
+    opacity: 1;
   }
 
-  .field input.is-invalid {
-    border-color: #b3261e;
-    background: #fff8f7;
+  43% {
+    transform: translate3d(112px, 1px, 0) rotate(0deg) scale(.96);
+    opacity: 1;
   }
 
-  .field input.is-valid {
-    border-color: #6c8b70;
+  /* Letter is now aligned with the envelope opening */
+  53% {
+    transform: translate3d(139px, 7px, 0) rotate(0deg) scale(.82);
+    opacity: 1;
   }
 
-  #writeToUsButton:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
+  /* Slides under the flap/front edge into the envelope */
+  61% {
+    transform: translate3d(151px, 17px, 0) rotate(0deg) scale(.66);
+    opacity: .92;
   }
+
+  67% {
+    transform: translate3d(156px, 25px, 0) rotate(0deg) scale(.48);
+    opacity: .35;
+  }
+
+  70%, 100% {
+    transform: translate3d(158px, 28px, 0) rotate(0deg) scale(.32);
+    opacity: 0;
+  }
+}
+
+@keyframes invictusEnvelopeFlap {
+  /* Open only while the letter enters */
+  0%, 43% {
+    transform: rotateX(0deg);
+  }
+
+  50%, 67% {
+    transform: rotateX(76deg);
+  }
+
+  /* Close after the letter is fully inside */
+  74%, 100% {
+    transform: rotateX(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .address-paper,
+  .envelope,
+  .envelope-flap {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .connect-envelope-scene {
+    transform: scale(.88);
+    transform-origin: center top;
+    margin-bottom: -28px;
+  }
+}
+</style>
+
+
+<style>
+/* Let's Connect — compact validation/helper typography */
+#contactForm .field-warning,
+#contactForm .message-warning,
+#contactForm .message-meta,
+#contactForm .field .field-warning,
+#contactForm .field .message-meta {
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+  margin-top: 5px !important;
+  margin-bottom: 0 !important;
+  letter-spacing: 0.01em !important;
+}
+
+#contactForm .field-warning,
+#contactForm .message-warning {
+  color: #c62828 !important;
+  font-weight: 500 !important;
+}
+
+#contactForm .message-meta {
+  color: rgba(24, 33, 45, 0.50) !important;
+  font-weight: 400 !important;
+}
+
+#contactForm .message-meta.is-limit {
+  color: #c62828 !important;
+  font-weight: 500 !important;
+}
 </style>
 
 </head>
@@ -361,32 +613,35 @@
         <div class="contact-brand">INVICTUS ENTERPRISES</div>
         <div class="contact-team">Buyback Team</div>
       </div>
-      <div class="contact-mail-animation" aria-label="Animated customer enquiry: an envelope is delivered into the Invictus postbox">
-        <div class="mail-route" aria-hidden="true"></div>
-        <div class="mailbox mailbox-reference-style">
-          <div class="mailbox-dome"></div>
-          <div class="mailbox-cap"></div>
-          <div class="mailbox-body"></div>
-          <div class="mailbox-label">INVICTUSHQ</div>
-          <div class="mailbox-slot"></div>
-          <div class="mailbox-slot-shadow"></div>
-          <div class="mailbox-base"></div>
+
+      <div class="connect-envelope-scene" aria-hidden="true">
+        <div class="paper-trail"></div>
+
+        <div class="address-paper">
+          <div class="paper-topline">MESSAGE</div>
+          <div class="paper-rule rule-1"></div>
+          <div class="paper-rule rule-2"></div>
+          <div class="paper-rule rule-3"></div>
+          <div class="paper-address">TO: INVICTUSHQ</div>
         </div>
-        <div class="mail-envelope" aria-hidden="true">
-          <span></span>
+
+        <div class="envelope">
+          <div class="envelope-back"></div>
+          <div class="envelope-paper"></div>
+          <div class="envelope-front"></div>
+          <div class="envelope-flap"></div>
+          <div class="envelope-label">INVICTUSHQ</div>
         </div>
-        <div class="mail-spark spark-one" aria-hidden="true"></div>
-        <div class="mail-spark spark-two" aria-hidden="true"></div>
-        <div class="mail-spark spark-three" aria-hidden="true"></div>
-        <div class="mail-caption">Send us a message. Let's start a conversation.</div>
       </div>
+
+      <div class="mail-caption">Send us a message. Let's start a conversation.</div>
     </div>
 
     <form class="contact-form reveal" id="contactForm" novalidate>
       <div class="form-grid">
         <div class="field">
           <label for="fName">Name</label>
-          <input type="text" id="fName" name="name" required />
+          <input type="text" id="fName" name="name" minlength="3" required />
           <p class="field-warning" id="nameWarning" role="alert"></p>
         </div>
 
@@ -429,7 +684,9 @@
 
         <div class="field field-full">
           <label for="fMessage">Message</label>
-          <textarea id="fMessage" name="message" required></textarea>
+          <textarea id="fMessage" name="message" minlength="10" maxlength="200" required></textarea>
+          <p class="message-meta" id="messageMeta" aria-live="polite">Max 200 words</p>
+          <p class="field-warning message-warning" id="messageWarning" role="alert"></p>
         </div>
       </div>
 
@@ -449,6 +706,8 @@
       <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
     </form>
     <iframe name="contactFormFrame" id="contactFormFrame" title="Form submission" aria-hidden="true" class="contact-form-frame"></iframe>
+  </div>
+</section>
   </div>
 </section>
 
@@ -478,29 +737,47 @@
   var form = document.getElementById("contactForm");
   if (!form) return;
 
+  var name = document.getElementById("fName");
   var phone = document.getElementById("fPhone");
   var email = document.getElementById("fEmail");
+  var message = document.getElementById("fMessage");
   var contact = document.getElementById("fContact");
   var phoneWarning = document.getElementById("phoneWarning");
   var emailWarning = document.getElementById("emailWarning");
+  var nameWarning = document.getElementById("nameWarning");
+  var messageWarning = document.getElementById("messageWarning");
+  var messageMeta = document.getElementById("messageMeta");
   var button = document.getElementById("writeToUsButton");
 
   var phoneStarted = false;
   var emailStarted = false;
+  var nameStarted = false;
+  var messageStarted = false;
 
-  function showWarning(input, warning, message, show) {
-    warning.textContent = show ? message : "";
-    warning.classList.toggle("is-visible", !!show);
-    input.classList.toggle("is-invalid", !!show);
+  function showWarning(input, warning, text) {
+    if (!warning) return;
+    warning.textContent = text;
+    warning.classList.add("is-visible");
+    if (input) input.classList.add("is-invalid");
+  }
+
+  function clearWarning(input, warning) {
+    if (warning) {
+      warning.textContent = "";
+      warning.classList.remove("is-visible");
+    }
+    if (input) input.classList.remove("is-invalid");
   }
 
   function markValid(input, warning) {
-    warning.textContent = "";
-    warning.classList.remove("is-visible");
-    input.classList.remove("is-invalid");
+    clearWarning(input, warning);
     input.classList.remove("is-valid");
     void input.offsetWidth;
     input.classList.add("is-valid");
+  }
+
+  function validName() {
+    return name.value.trim().length >= 3;
   }
 
   function validPhone() {
@@ -511,41 +788,73 @@
     return /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/.test(email.value.trim());
   }
 
+  function validMessage() {
+    return message.value.trim().length >= 10 && message.value.trim().length <= 200;
+  }
+
+  function updateMessageCounter() {
+    var count = message.value.length;
+
+    if (count === 0) {
+      messageMeta.textContent = "Max 200 words";
+      messageMeta.classList.remove("is-limit");
+    } else if (count >= 200) {
+      messageMeta.textContent = "Maximum characters reached";
+      messageMeta.classList.add("is-limit");
+    } else {
+      messageMeta.textContent = count + "/200";
+      messageMeta.classList.remove("is-limit");
+    }
+  }
+
   function updateButton() {
-    var bothValid = validPhone() && validEmail();
+    var allValid =
+      validName() &&
+      validPhone() &&
+      validEmail() &&
+      validMessage();
 
-    button.disabled = !bothValid;
-    button.setAttribute("aria-disabled", String(!bothValid));
+    button.disabled = !allValid;
+    button.setAttribute("aria-disabled", String(!allValid));
 
-    if (bothValid) {
+    if (allValid) {
       contact.value = phone.value.trim() + " | " + email.value.trim();
     } else {
       contact.value = "";
     }
 
-    return bothValid;
+    return allValid;
   }
 
-  phone.addEventListener("input", function () {
-    phoneStarted = true;
-    this.value = this.value.replace(/\D/g, "").slice(0, 10);
+  // Name: no warning while typing. Validate when leaving the field.
+  name.addEventListener("input", function () {
+    nameStarted = true;
+    clearWarning(name, nameWarning);
+    updateButton();
+  });
 
-    if (validPhone()) {
-      markValid(phone, phoneWarning);
+  name.addEventListener("blur", function () {
+    if (!nameStarted && !name.value.trim()) return;
+
+    if (name.value.trim().length > 0 && !validName()) {
+      showWarning(name, nameWarning, "Please enter at least 3 characters.");
     } else {
-      showWarning(phone, phoneWarning, "Please enter a valid 10-digit mobile number.", true);
+      clearWarning(name, nameWarning);
     }
 
     updateButton();
   });
 
-  email.addEventListener("input", function () {
-    emailStarted = true;
+  // Phone: NEVER warn while typing. Validate only when leaving the field.
+  phone.addEventListener("input", function () {
+    phoneStarted = true;
+    this.value = this.value.replace(/\D/g, "").slice(0, 10);
+    clearWarning(phone, phoneWarning);
 
-    if (validEmail()) {
-      markValid(email, emailWarning);
+    if (validPhone()) {
+      markValid(phone, phoneWarning);
     } else {
-      showWarning(email, emailWarning, "Please enter a valid email address, such as name@company.com.", true);
+      phone.classList.remove("is-valid");
     }
 
     updateButton();
@@ -557,7 +866,21 @@
     if (validPhone()) {
       markValid(phone, phoneWarning);
     } else {
-      showWarning(phone, phoneWarning, "Please enter a valid 10-digit mobile number.", true);
+      showWarning(phone, phoneWarning, "Please enter a valid 10-digit mobile number.");
+    }
+
+    updateButton();
+  });
+
+  // Email: NEVER warn while typing. Validate only when leaving the field.
+  email.addEventListener("input", function () {
+    emailStarted = true;
+    clearWarning(email, emailWarning);
+
+    if (validEmail()) {
+      markValid(email, emailWarning);
+    } else {
+      email.classList.remove("is-valid");
     }
 
     updateButton();
@@ -569,9 +892,35 @@
     if (validEmail()) {
       markValid(email, emailWarning);
     } else {
-      showWarning(email, emailWarning, "Please enter a valid email address, such as name@company.com.", true);
+      showWarning(email, emailWarning, "Please enter a valid email address, such as name@company.com.");
     }
 
+    updateButton();
+  });
+
+  // Message: counter updates live; minimum warning appears after leaving the field.
+  message.addEventListener("input", function () {
+    messageStarted = true;
+
+    if (this.value.length > 200) {
+      this.value = this.value.slice(0, 200);
+    }
+
+    updateMessageCounter();
+    clearWarning(message, messageWarning);
+    updateButton();
+  });
+
+  message.addEventListener("blur", function () {
+    if (!messageStarted && !message.value.trim()) return;
+
+    if (message.value.trim().length > 0 && !validMessage()) {
+      showWarning(message, messageWarning, "Please enter at least 10 characters.");
+    } else {
+      clearWarning(message, messageWarning);
+    }
+
+    updateMessageCounter();
     updateButton();
   });
 
@@ -580,25 +929,39 @@
       event.preventDefault();
       event.stopImmediatePropagation();
 
-      phoneStarted = true;
-      emailStarted = true;
+      if (!validName()) {
+        nameStarted = true;
+        showWarning(name, nameWarning, "Please enter at least 3 characters.");
+      }
 
       if (!validPhone()) {
-        showWarning(phone, phoneWarning, "Please enter a valid 10-digit mobile number.", true);
+        phoneStarted = true;
+        showWarning(phone, phoneWarning, "Please enter a valid 10-digit mobile number.");
       }
 
       if (!validEmail()) {
-        showWarning(email, emailWarning, "Please enter a valid email address, such as name@company.com.", true);
+        emailStarted = true;
+        showWarning(email, emailWarning, "Please enter a valid email address, such as name@company.com.");
       }
 
+      if (!validMessage()) {
+        messageStarted = true;
+        showWarning(message, messageWarning, "Please enter at least 10 characters.");
+      }
+
+      updateMessageCounter();
       return false;
     }
   }, true);
 
+  updateMessageCounter();
   button.disabled = true;
   button.setAttribute("aria-disabled", "true");
 })();
 </script>
+
+
+
 
 
 <script src="script.js"></script>
