@@ -35,6 +35,37 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="styles.css" />
+
+<style>
+  .required-star {
+    color: #b3261e;
+    font-weight: 700;
+    margin-left: 0.12rem;
+  }
+
+  .field-warning {
+    min-height: 1.15em;
+    margin: 0.38rem 0 0;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: #b3261e;
+  }
+
+  .field input.is-invalid {
+    border-color: #b3261e;
+    background: #fff8f7;
+  }
+
+  .field input.is-valid {
+    border-color: #6c8b70;
+  }
+
+  #writeToUsButton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+</style>
+
 </head>
 <body>
 
@@ -356,21 +387,64 @@
         <div class="field">
           <label for="fName">Name</label>
           <input type="text" id="fName" name="name" required />
+          <p class="field-warning" id="nameWarning" role="alert"></p>
         </div>
+
         <div class="field">
           <label for="fCompany">Company</label>
           <input type="text" id="fCompany" name="company" />
         </div>
-        <div class="field field-full">
-          <label for="fContact">Phone / Email</label>
-          <input type="text" id="fContact" name="contact" required />
+
+        <div class="field">
+          <label for="fPhone">Mobile Number <span class="required-star">*</span></label>
+          <input
+            type="tel"
+            id="fPhone"
+            name="phone"
+            inputmode="numeric"
+            autocomplete="tel"
+            maxlength="10"
+            minlength="10"
+            pattern="[0-9]{10}"
+            required
+            aria-describedby="phoneWarning"
+            placeholder="10-digit mobile number"
+          />
+          <p class="field-warning" id="phoneWarning" role="alert"></p>
         </div>
+
+        <div class="field">
+          <label for="fEmail">Email Address <span class="required-star">*</span></label>
+          <input
+            type="email"
+            id="fEmail"
+            name="email"
+            autocomplete="email"
+            required
+            aria-describedby="emailWarning"
+            placeholder="name@company.com"
+          />
+          <p class="field-warning" id="emailWarning" role="alert"></p>
+        </div>
+
         <div class="field field-full">
           <label for="fMessage">Message</label>
           <textarea id="fMessage" name="message" required></textarea>
         </div>
       </div>
-      <button type="submit" class="btn btn-outline-dark" id="contactSubmit" style="margin-top:1.5rem;">Write to Us</button>
+
+      <!-- Combined contact value used by the existing Google Apps Script handler -->
+      <input type="hidden" id="fContact" name="contact" />
+
+      <button
+        type="submit"
+        class="btn btn-outline-dark"
+        id="writeToUsButton"
+        style="margin-top:1.5rem;"
+        disabled
+        aria-disabled="true"
+      >Write to Us</button>
+
       <p class="form-note">Your message will be securely sent to our team. We will contact you shortly.</p>
       <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
     </form>
@@ -395,6 +469,137 @@
   </div>
   <div class="footer-bottom">&copy; 2026 Invictus Enterprises. All rights reserved.</div>
 </footer>
+
+
+<script>
+(function () {
+  "use strict";
+
+  var form = document.getElementById("contactForm");
+  if (!form) return;
+
+  var phone = document.getElementById("fPhone");
+  var email = document.getElementById("fEmail");
+  var contact = document.getElementById("fContact");
+  var phoneWarning = document.getElementById("phoneWarning");
+  var emailWarning = document.getElementById("emailWarning");
+  var button = document.getElementById("writeToUsButton");
+
+  var phoneStarted = false;
+  var emailStarted = false;
+
+  function showWarning(input, warning, message, show) {
+    warning.textContent = show ? message : "";
+    warning.classList.toggle("is-visible", !!show);
+    input.classList.toggle("is-invalid", !!show);
+  }
+
+  function markValid(input, warning) {
+    warning.textContent = "";
+    warning.classList.remove("is-visible");
+    input.classList.remove("is-invalid");
+    input.classList.remove("is-valid");
+    void input.offsetWidth;
+    input.classList.add("is-valid");
+  }
+
+  function validPhone() {
+    return /^[0-9]{10}$/.test(phone.value.trim());
+  }
+
+  function validEmail() {
+    return /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/.test(email.value.trim());
+  }
+
+  function updateButton() {
+    var bothValid = validPhone() && validEmail();
+
+    button.disabled = !bothValid;
+    button.setAttribute("aria-disabled", String(!bothValid));
+
+    if (bothValid) {
+      contact.value = phone.value.trim() + " | " + email.value.trim();
+    } else {
+      contact.value = "";
+    }
+
+    return bothValid;
+  }
+
+  phone.addEventListener("input", function () {
+    phoneStarted = true;
+    this.value = this.value.replace(/\D/g, "").slice(0, 10);
+
+    if (validPhone()) {
+      markValid(phone, phoneWarning);
+    } else {
+      showWarning(phone, phoneWarning, "Please enter a valid 10-digit mobile number.", true);
+    }
+
+    updateButton();
+  });
+
+  email.addEventListener("input", function () {
+    emailStarted = true;
+
+    if (validEmail()) {
+      markValid(email, emailWarning);
+    } else {
+      showWarning(email, emailWarning, "Please enter a valid email address, such as name@company.com.", true);
+    }
+
+    updateButton();
+  });
+
+  phone.addEventListener("blur", function () {
+    if (!phoneStarted && !phone.value.trim()) return;
+
+    if (validPhone()) {
+      markValid(phone, phoneWarning);
+    } else {
+      showWarning(phone, phoneWarning, "Please enter a valid 10-digit mobile number.", true);
+    }
+
+    updateButton();
+  });
+
+  email.addEventListener("blur", function () {
+    if (!emailStarted && !email.value.trim()) return;
+
+    if (validEmail()) {
+      markValid(email, emailWarning);
+    } else {
+      showWarning(email, emailWarning, "Please enter a valid email address, such as name@company.com.", true);
+    }
+
+    updateButton();
+  });
+
+  form.addEventListener("submit", function (event) {
+    if (!updateButton()) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      phoneStarted = true;
+      emailStarted = true;
+
+      if (!validPhone()) {
+        showWarning(phone, phoneWarning, "Please enter a valid 10-digit mobile number.", true);
+      }
+
+      if (!validEmail()) {
+        showWarning(email, emailWarning, "Please enter a valid email address, such as name@company.com.", true);
+      }
+
+      return false;
+    }
+  }, true);
+
+  button.disabled = true;
+  button.setAttribute("aria-disabled", "true");
+})();
+</script>
+
 
 <script src="script.js"></script>
 </body>
